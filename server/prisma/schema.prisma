@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Location {
+  GENERAL
+  STORE
+}
+
+enum Size {
+  S18
+  S19
+  S20
+  S21
+  S22
+  S23
+  S24
+  S25
+  S26
+  S27
+  S28
+}
+
+enum Color {
+  ROJO
+  BLANCO
+  NEGRO
+  AZUL
+  VERDE
+  ROSA
+  MORADO
+  CAFE
+  GRIS
+}
+
+enum ShoeType {
+  DEPORTIVO
+  ACCESORIOS
+  CASUAL_H
+  CASUAL_M // Corregido: era "CAUSAL_M"
+  NINOS // Corregido: era "NIÑOS" (mejor usar sin ñ)
+}
+
+enum State {
+  FUNCTIONAL
+  SEMIFUNCIONAL
+}
+
+model User {
+  id        String @id @default(uuid())
+  name      String @db.VarChar(15)
+  lastName  String @db.VarChar(25)
+  email     String @unique @db.VarChar(35) // Agregado @unique
+  password  String @db.VarChar(70)
+  telephone String @db.VarChar(12)
+
+  // Relations corregidas (deberían ser en singular)
+  admin     Admin[]
+  sales     Sale[] // Corregido: "Sales" -> "Sale"
+  storages  UserStorage[] // Renombrado para claridad
+  qualities Quality[]
+  checkouts Checkout[]
+  managers  Manager[]
+}
+
+model Store {
+  id       String @id @default(uuid())
+  location String
+  name     String
+
+  // Relations corregidas
+  sales            Sale[]
+  checkouts        Checkout[]
+  managers         Manager[]
+  storeInventories StoreInventory[]
+}
+
+model Admin {
+  id     String @id @default(uuid())
+  idUser String
+
+  user User @relation(fields: [idUser], references: [id], onDelete: Cascade)
+}
+
+model Storage {
+  id       String @id @default(uuid())
+  location String
+  name     String
+
+  storageInventories StorageInventory[]
+  storageUsers       UserStorage[] // Renombrado
+}
+
+model Batch {
+  id    String @id @default(uuid())
+  state State
+
+  shoes              Shoe[] // Corregido: "Shod" -> "Shoe"
+  storeInventories   StoreInventory[]
+  storageInventories StorageInventory[]
+}
+
+model StoreInventory {
+  id      String @id @default(uuid())
+  idBatch String
+  section String // Corregido: "Section" -> "section" (minúscula)
+  idStore String
+
+  // Relations
+  batch Batch @relation(fields: [idBatch], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [idStore], references: [id], onDelete: Cascade)
+}
+
+model StorageInventory {
+  id        String @id @default(uuid())
+  idBatch   String
+  section   String // Corregido: "Section" -> "section"
+  idStorage String
+
+  // Relations
+  batch   Batch   @relation(fields: [idBatch], references: [id], onDelete: Cascade)
+  storage Storage @relation(fields: [idStorage], references: [id], onDelete: Cascade)
+}
+
+model Shoe {
+  id       String   @id @default(uuid())
+  size     Size // Corregido: "Size" -> "size" (minúscula)
+  color    Color // Corregido: "Color" -> "color"
+  brand    String
+  material String
+  idBatch  String
+  type     ShoeType // Corregido: "ShodType" -> "ShoeType"
+
+  // Relations
+  batch Batch @relation(fields: [idBatch], references: [id], onDelete: Cascade)
+}
+
+model Sale {
+  id      String @id @default(uuid())
+  idUser  String
+  idStore String
+
+  // Relations
+  user  User  @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [idStore], references: [id], onDelete: Cascade)
+}
+
+model UserStorage {
+  id        String   @id @default(uuid())
+  idUser    String
+  location  Location
+  idStorage String
+
+  // Relations
+  user    User    @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  storage Storage @relation(fields: [idStorage], references: [id], onDelete: Cascade)
+}
+
+model Quality {
+  id       String   @id @default(uuid())
+  idUser   String
+  location Location
+
+  // Relations
+  user User @relation(fields: [idUser], references: [id], onDelete: Cascade)
+}
+
+model Checkout {
+  id      String @id @default(uuid())
+  idUser  String
+  idStore String
+
+  // Relations
+  user  User  @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [idStore], references: [id], onDelete: Cascade)
+}
+
+model Manager {
+  id      String @id @default(uuid())
+  idUser  String
+  idStore String
+
+  // Relations
+  user  User  @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [idStore], references: [id], onDelete: Cascade)
+}

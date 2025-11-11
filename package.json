@@ -1,0 +1,22 @@
+{
+  "name": "logistics-hackathon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently 'cd client && bun run dev' 'cd server && bun run dev' ",
+    "dev:server": "cd server && bun run dev",
+    "dev:client": "cd client && bun run dev",
+    "install": "concurrently 'cd client && bun install' 'cd server && bun install' ",
+    "install:server": "cd server && bun install",
+    "install:client": "cd client && bun install",
+    "start": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

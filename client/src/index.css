@@ -1,0 +1,16 @@
+@import "tailwindcss";
+:root {
+  --color-yale: #134074;
+  --color-berkley: #13315c;
+  --color-oxford: #0b2545;
+  --color-powder: #8da9c4;
+}
+
+@layer base {
+  .text-custom {
+    color: var(--color-gray-300);
+  }
+  .bg-custom {
+    background-color: var(--color-oxford);
+  }
+}
