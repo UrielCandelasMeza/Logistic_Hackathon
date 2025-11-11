@@ -251,12 +251,10 @@ export default function SupportChatbot() {
   //const scrollAreaRef = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
 
-  // IBM Watson Configuration usando PROJECT ID
-  // IMPORTANTE: En producción, estas credenciales deben estar en variables de entorno
   const watsonConfig: IBMWatsonConfig = {
-    apiKey: "YOUR_IBM_WATSON_API_KEY", // Tu API Key de IBM Cloud
-    serviceUrl: "https://api.us-south.assistant.watson.cloud.ibm.com", // Dallas region
-    projectId: "YOUR_PROJECT_ID", // Tu Project ID (NO Assistant ID)
+    apiKey: "",
+    serviceUrl: "", // Dallas region
+    projectId: "",
   };
 
   // Initialize Watson service
